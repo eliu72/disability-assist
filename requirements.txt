@@ -12,6 +12,7 @@ filelock==3.0.12
 Flask==1.1.2
 Flask-RESTful==0.3.8
 glfw==2.0.0
+gunicorn==19.9.0
 idna==2.10
 ipython==7.21.0
 ipython-genutils==0.2.0
