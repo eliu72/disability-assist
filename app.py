@@ -1,101 +1,30 @@
 from flask import Flask 
-from flask.json import jsonify
+from flask import request, jsonify
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
-books = [
-    {
-        "id": 0,
-        "author": "Kevin Kelly",
-        "quote": "The business plans of the next 10,000 startups are easy to forecast: " +
-                 "Take X and add AI." 
-    },
-    {
-        "id": 1,
-        "author": "Stephen Hawking",
-        "quote": "The development of full artificial intelligence could " +
-                 "spell the end of the human race…. " +
-                 "It would take off on its own, and re-design " +
-                 "itself at an ever increasing rate. " +
-                 "Humans, who are limited by slow biological evolution, " + 
-                 "couldn't compete, and would be superseded."
-    },
-    {
-        "id": 2,
-        "author": "Claude Shannon",
-        "quote": "I visualize a time when we will be to robots what " +
-                 "dogs are to humans, " + 
-                 "and I’m rooting for the machines."
-    },
-    {
-        "id": 3,
-        "author": "Elon Musk",
-        "quote": "The pace of progress in artificial intelligence " +
-                 "(I’m not referring to narrow AI) " +
-                 "is incredibly fast. Unless you have direct " +
-                 "exposure to groups like Deepmind, " +
-                 "you have no idea how fast—it is growing " + 
-                 "at a pace close to exponential. " +
-                 "The risk of something seriously dangerous " +
-                 "happening is in the five-year timeframe." + 
-                 "10 years at most."
+# running virtual environment on windows
+# virtualenv env
+# .\env\Scripts\activate.bat
+# python app.py
 
-    },
-    {
-        "id": 4,
-        "author": "Geoffrey Hinton",
-        "quote": "I have always been convinced that the only way " +
-                 "to get artificial intelligence to work " + 
-                 "is to do the computation in a way similar to the human brain. " +
-                 "That is the goal I have been pursuing. We are making progress, " +
-                 "though we still have lots to learn about " +
-                 "how the brain actually works."
-    },
-    {
-        "id": 5,
-        "author": "Pedro Domingos",
-        "quote": "People worry that computers will " +
-                 "get too smart and take over the world, " + 
-                 "but the real problem is that they're too stupid " +
-                 "and they've already taken over the world."
-    },
-    {
-        "id": 6,
-        "author": "Alan Turing",
-        "quote": "It seems probable that once the machine thinking " +
-                 "method had started, it would not take long " +
-                 "to outstrip our feeble powers… " +
-                 "They would be able to converse " +
-                 "with each other to sharpen their wits. " +
-                 "At some stage therefore, we should " +
-                 "have to expect the machines to take control."
-    },
-    {
-        "id": 7,
-        "author": "Ray Kurzweil",
-        "quote": "Artificial intelligence will reach " +
-                 "human levels by around 2029. " + 
-                 "Follow that out further to, say, 2045, " +
-                 "we will have multiplied the intelligence, " + 
-                 "the human biological machine intelligence " +
-                 "of our civilization a billion-fold."
-    },
-    {
-        "id": 8,
-        "author": "Sebastian Thrun",
-        "quote": "Nobody phrases it this way, but I think " +
-                 "that artificial intelligence " +
-                 "is almost a humanities discipline. It's really an attempt " +
-                 "to understand human intelligence and human cognition."
-    },
-    {
-        "id": 9,
-        "author": "Andrew Ng",
-        "quote": "We're making this analogy that AI is the new electricity." + 
-                 "Electricity transformed industries: agriculture, " +
-                 "transportation, communication, manufacturing."
-    }
+books = [
+    {'id': 0,
+     'title': 'A Fire Upon the Deep',
+     'author': 'Vernor Vinge',
+     'first_sentence': 'The coldsleep itself was dreamless.',
+     'year_published': '1992'},
+    {'id': 1,
+     'title': 'The Ones Who Walk Away From Omelas',
+     'author': 'Ursula K. Le Guin',
+     'first_sentence': 'With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.',
+     'published': '1973'},
+    {'id': 2,
+     'title': 'Dhalgren',
+     'author': 'Samuel R. Delany',
+     'first_sentence': 'to wound the autumnal city.',
+     'published': '1975'}
 ]
 
 @app.route('/', methods=['GET'])
@@ -104,10 +33,33 @@ def home():
 <p>A prototype API for distant reading of science fiction novels.</p>'''
 
 
-# A route to return all of the available entries in our catalog.
 @app.route('/api/v1/resources/books/all', methods=['GET'])
 def api_all():
     return jsonify(books)
+
+
+@app.route('/api/v1/resources/books', methods=['GET'])
+def api_id():
+    # Check if an ID was provided as part of the URL.
+    # If ID is provided, assign it to a variable.
+    # If no ID is provided, display an error in the browser.
+    if 'id' in request.args:
+        id = int(request.args['id'])
+    else:
+        return "Error: No id field provided. Please specify an id."
+
+    # Create an empty list for our results
+    results = []
+
+    # Loop through the data and match results that fit the requested ID.
+    # IDs are unique, but other fields might return many results
+    for book in books:
+        if book['id'] == id:
+            results.append(book)
+
+    # Use the jsonify function from Flask to convert our list of
+    # Python dictionaries to the JSON format.
+    return jsonify(results)
 
 app.run()
     
