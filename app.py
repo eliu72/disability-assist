@@ -5,9 +5,17 @@ app = Flask(__name__)
 app.config["DEBUG"] = True
 
 # running virtual environment on windows
+###############################################
 # virtualenv env
 # .\env\Scripts\activate.bat
 # python app.py
+
+# deploy to heroku
+###############################################
+# git add .
+# git commit -m "mesg"
+# git push
+# git push heroku main
 
 books = [
     {'id': 0,
