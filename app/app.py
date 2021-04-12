@@ -86,7 +86,7 @@ def home():
 
 @app.route('/api/path/legs/all', methods=['GET'])
 def api_all():
-    return jsonify(books)
+    return jsonify(legs)
 
 
 # @app.route('/api/v1/resources/books', methods=['GET'])
