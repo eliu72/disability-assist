@@ -17,6 +17,10 @@ app.config["DEBUG"] = True
 # git push
 # git push heroku main
 
+
+# tutorial
+# https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask
+
 books = [
     {'id': 0,
      'title': 'A Fire Upon the Deep',
@@ -35,37 +39,76 @@ books = [
      'published': '1975'}
 ]
 
+legs = [
+    {
+        "start_location":{
+            "lat": 37.421925,
+            "lon": -122.0841293
+        },
+        "end_location":{
+            "lat": 37.421925,
+            "lon": -122.0841293
+        },
+        "distance":{
+            "meters": 5,
+            "text": "5 m"
+        },
+        "direction":{
+            "degrees": 30,
+            "text": "30 degrees east of north"
+        }
+    },
+    {
+        "start_location":{
+            "lat": 37.421925,
+            "lon": -122.0841293
+        },
+        "end_location":{
+            "lat": 37.421925,
+            "lon": -122.0841293
+        },
+        "distance":{
+            "meters": 5,
+            "text": "5 m"
+        },
+        "direction":{
+            "degrees": 30,
+            "text": "30 degrees east of north"
+        }
+    },
+]
+
 @app.route('/', methods=['GET'])
 def home():
-    return '''<h1>Distant Reading Archive</h1>
-<p>A prototype API for distant reading of science fiction novels.</p>'''
+    return '''<h1>Disability Assistance API</h1>
+<p>A prototype API for retrieving directions for airport navigation.</p>'''
 
 
-@app.route('/api/v1/resources/books/all', methods=['GET'])
+@app.route('/api/path/legs/all', methods=['GET'])
 def api_all():
     return jsonify(books)
 
 
-@app.route('/api/v1/resources/books', methods=['GET'])
-def api_id():
-    # Check if an ID was provided as part of the URL.
-    # If ID is provided, assign it to a variable.
-    # If no ID is provided, display an error in the browser.
-    if 'id' in request.args:
-        id = int(request.args['id'])
-    else:
-        return "Error: No id field provided. Please specify an id."
+# @app.route('/api/v1/resources/books', methods=['GET'])
+# def api_id():
+#     # Check if an ID was provided as part of the URL.
+#     # If ID is provided, assign it to a variable.
+#     # If no ID is provided, display an error in the browser.
+#     if 'id' in request.args:
+#         id = int(request.args['id'])
+#     else:
+#         return "Error: No id field provided. Please specify an id."
 
-    # Create an empty list for our results
-    results = []
+#     # Create an empty list for our results
+#     results = []
 
-    # Loop through the data and match results that fit the requested ID.
-    # IDs are unique, but other fields might return many results
-    for book in books:
-        if book['id'] == id:
-            results.append(book)
+#     # Loop through the data and match results that fit the requested ID.
+#     # IDs are unique, but other fields might return many results
+#     for book in books:
+#         if book['id'] == id:
+#             results.append(book)
 
-    # Use the jsonify function from Flask to convert our list of
-    # Python dictionaries to the JSON format.
-    return jsonify(results)
+#     # Use the jsonify function from Flask to convert our list of
+#     # Python dictionaries to the JSON format.
+#     return jsonify(results)
     
