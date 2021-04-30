@@ -1,5 +1,6 @@
 from flask import Flask 
 from flask import request, jsonify
+import graph.Graph as g
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -9,6 +10,7 @@ app.config["DEBUG"] = True
 # virtualenv env
 # .\env\Scripts\activate.bat
 # python app.py
+# flask run
 
 # deploy to heroku
 ###############################################
@@ -17,66 +19,12 @@ app.config["DEBUG"] = True
 # git push
 # git push heroku main
 
+#TEST
+###############################################
+# http://127.0.0.1:5000/api/path?lat=33.64307&lon=-84.43250&airport=yyz&map=2&destID=C55
 
 # tutorial
 # https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask
-
-# books = [
-#     {'id': 0,
-#      'title': 'A Fire Upon the Deep',
-#      'author': 'Vernor Vinge',
-#      'first_sentence': 'The coldsleep itself was dreamless.',
-#      'year_published': '1992'},
-#     {'id': 1,
-#      'title': 'The Ones Who Walk Away From Omelas',
-#      'author': 'Ursula K. Le Guin',
-#      'first_sentence': 'With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.',
-#      'published': '1973'},
-#     {'id': 2,
-#      'title': 'Dhalgren',
-#      'author': 'Samuel R. Delany',
-#      'first_sentence': 'to wound the autumnal city.',
-#      'published': '1975'}
-# ]
-
-legs = [
-    {
-        "start_location":{
-            "lat": 37.421925,
-            "lon": -122.0841293
-        },
-        "end_location":{
-            "lat": 37.421925,
-            "lon": -122.0841293
-        },
-        "distance":{
-            "meters": 5,
-            "text": "5 m"
-        },
-        "direction":{
-            "degrees": 30,
-            "text": "30 degrees east of north"
-        }
-    },
-    {
-        "start_location":{
-            "lat": 37.421925,
-            "lon": -122.0841293
-        },
-        "end_location":{
-            "lat": 37.421925,
-            "lon": -122.0841293
-        },
-        "distance":{
-            "meters": 5,
-            "text": "5 m"
-        },
-        "direction":{
-            "degrees": 30,
-            "text": "30 degrees east of north"
-        }
-    },
-]
 
 @app.route('/', methods=['GET'])
 def home():
@@ -84,31 +32,112 @@ def home():
 <p>A prototype API for retrieving directions for airport navigation.</p>'''
 
 
-@app.route('/api/path/legs/all', methods=['GET'])
+@app.route('/api/path', methods=['GET'])
 def api_all():
+
+    query_parameters = request.args
+    
+    # user geo location
+    lat = float(query_parameters.get('lat'))
+    lon = float(query_parameters.get('lon'))
+
+    # requested map
+    airport = query_parameters.get('airport')
+    myMap = query_parameters.get('map')
+
+    # requested destination id  - ex. "C52", "C55", etc
+    destID = query_parameters.get('destID')
+
+    # init digraph
+    numVertices = 6
+    graph = g.Graph(numVertices)
+
+    node1 = g.Node(1, 33.64331, -84.43274, "C52")
+    node2 = g.Node(2, 33.64331, -84.43252, "C55")
+    node3 = g.Node(3, 33.64329, -84.43284, "C50")
+    node4 = g.Node(4, 33.64310, -84.43282, "C46")
+    node5 = g.Node(5, 33.64311, -84.43241, "C49")
+
+    # need to query from db to determine the node num of the dest id
+    # rn this is hardcoded
+    destination = 1
+    destNode = node1
+
+    # add vertices
+    graph.addVertex(node1)
+    graph.addVertex(node2)
+    graph.addVertex(node3)
+    graph.addVertex(node4)
+    graph.addVertex(node5)
+
+    # add directed edges
+    # direction is in degrees north
+    graph.addEdge(node1, node2)
+    graph.addEdge(node2, node1)
+    graph.addEdge(node2, node5)
+    graph.addEdge(node5, node2)
+    graph.addEdge(node3, node1)
+    graph.addEdge(node1, node3)
+    graph.addEdge(node4, node5)
+    graph.addEdge(node5, node4)
+    graph.addEdge(node3, node4)
+    graph.addEdge(node4, node3)
+
+    # graph.printGraph()
+
+    # search for the shortest path from curr location to destination
+    nearestNode, dist, direction = g.nearest(numVertices, graph, lat, lon, "M")
+    paths = g.dijkstra(numVertices, graph, destNode)
+    paths[0] = nearestNode.getLabel()
+
+    print(paths)
+
+    # list of vertices
+    vertices = graph.getVertices()
+
+    # json output for the legs of the route
+    legs = []
+
+    # current start node
+    startNode = 0
+
+    # current destination node
+    destNode = paths[startNode]
+
+    # add the path from curr location to nearest node
+    i = 1
+    currLeg = {}
+    currLeg["leg"] = i
+    currLeg["start"] = {"lat": lat, "lon": lon}
+    currLeg["end"] = {"lat": vertices[destNode].getLat(), "lon": vertices[destNode].getLon()}
+    currLeg["distance"] = {"miles": dist}
+    currLeg["direction"] = {"degrees": direction, "bearing": "degrees from east"}
+
+
+    legs.append(currLeg)
+    
+    i += 1
+
+    startNode = destNode
+
+    # add remaining paths
+    while paths[startNode] != None:
+
+        # update destination node
+        destNode = paths[startNode]
+
+        # build the path for the current leg
+        currLeg = {}
+        currLeg["leg"] = i
+        currLeg["start"] = {"lat": vertices[startNode].getLat(), "lon": vertices[startNode].getLon()}
+        currLeg["end"] = {"lat": vertices[destNode].getLat(), "lon": vertices[destNode].getLon()}
+        currLeg["distance"] = {"miles": g.distance(vertices[startNode], vertices[destNode])}
+        currLeg["direction"] = {"degrees": g.bearing(vertices[startNode], vertices[destNode]), "bearing": "degrees from east"}
+
+        # append to list of legs
+        legs.append(currLeg)
+        startNode = destNode
+        i += 1
+
     return jsonify(legs)
 
-
-# @app.route('/api/v1/resources/books', methods=['GET'])
-# def api_id():
-#     # Check if an ID was provided as part of the URL.
-#     # If ID is provided, assign it to a variable.
-#     # If no ID is provided, display an error in the browser.
-#     if 'id' in request.args:
-#         id = int(request.args['id'])
-#     else:
-#         return "Error: No id field provided. Please specify an id."
-
-#     # Create an empty list for our results
-#     results = []
-
-#     # Loop through the data and match results that fit the requested ID.
-#     # IDs are unique, but other fields might return many results
-#     for book in books:
-#         if book['id'] == id:
-#             results.append(book)
-
-#     # Use the jsonify function from Flask to convert our list of
-#     # Python dictionaries to the JSON format.
-#     return jsonify(results)
-    

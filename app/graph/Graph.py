@@ -7,7 +7,6 @@ import heapq
 # .\env\Scripts\activate.bat
 # python Graph.py
 
-
 class Node:
     def __init__(self, label, latitude, longitude, name, distance=None, nextNode=None, dir=None):
         self.vertex = label
@@ -54,9 +53,16 @@ class Graph:
         self.graph = [None] * self.numVert
         self.vertices = [None] * self.numVert
 
-    def addEdge(self, src, dst, dist, dir):
+    def addEdge(self, src, dst):
         srcNode = src.getLabel()
+
+        # calculate distance between 2 nodes
+        dist = distance(src, dst)
         dst.setDist(dist)
+
+        # calculate bearing between 2 nodes
+        direction = bearing(src, dst)
+        dst.setDir(direction)
 
         if self.graph[srcNode] == None:
             self.graph[srcNode] = []
@@ -84,8 +90,23 @@ class Graph:
 
 # calculates the bearing between two lat/lon coordiantes
 # https://www.movable-type.co.uk/scripts/latlong.html
-def bearing(lat1, lon1, lat2, lon2):
-    
+"""
+Understanding bearings
+------------------------
+0 degrees = W
+90 degrees = N
+180 degrees = E
+270 degrees = S
+"""
+def bearing(node1, node2):
+
+    # extract lat, lon from nodes
+    lat1 = node1.getLat()
+    lon1 = node1.getLon()
+    lat2 = node2.getLat()
+    lon2 = node2.getLon()
+
+    # calculate bearing
     y = math.sin(lon2-lon1) * math.cos(lat2)
     x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(lon2-lon1)
     bearingRadians = math.atan2(y,x)
@@ -93,12 +114,19 @@ def bearing(lat1, lon1, lat2, lon2):
     # bearing in degrees
     bearing = (bearingRadians*180/math.pi + 360) % 360 
 
-    print(bearing)
     return bearing
 
 # calculates the distance between two lon/lat coordinates
 # https://www.geodatasource.com/developers/java
-def distance(lat1, lon1, lat2, lon2, unit="M"):
+def distance(node1, node2, unit="M"):
+
+    # extract lat, lon from nodes
+    lat1 = node1.getLat()
+    lon1 = node1.getLon()
+    lat2 = node2.getLat()
+    lon2 = node2.getLon()
+
+    # calculate distance
     if (lat1 == lat2) and (lon1 == lon2):
         return 0
     else: 
@@ -120,20 +148,25 @@ def distance(lat1, lon1, lat2, lon2, unit="M"):
         return dist
 
 # given user's geolocation, determine the nearest node on the graph and distance to it
-def nearest(numNodes, graph, lat, lon, unit):
+def nearest(numNodes, graph, lat, lon, unit="M"):
 
     vertices = graph.getVertices()
     minDist = float('inf')
     nearest = None
+    direction = None
+
+    # current geolocation
+    curr = Node(0, lat, lon, "")
 
     for i in vertices:
         if i != None:
-            dist = distance(i.getLon(), i.getLat(), lon, lat, unit)
+            dist = distance(i, curr, unit)
             if dist < minDist: 
                 minDist = dist
                 nearest = i 
+                direction = bearing(i, curr)
     
-    return nearest, minDist
+    return nearest, minDist, direction
 
 def dijkstra(numNodes, graph, src):
     srcNode = src.getLabel()
@@ -141,6 +174,7 @@ def dijkstra(numNodes, graph, src):
     # initialization
     distances = [float('inf')] * numNodes
     distances[srcNode] = 0
+    parents = [None] * numNodes
 
     # init priority queue
     pq = [(0, srcNode)]
@@ -160,13 +194,10 @@ def dijkstra(numNodes, graph, src):
             neighbor = node.getLabel()
             if distance < distances[neighbor]:
                 distances[neighbor] = distance
+                parents[neighbor] = current_vertex
                 heapq.heappush(pq, (distance, neighbor))
 
-    return distances
-
-    # while queue is not empty, extract min and relax
-
-
+    return parents
 
 # Driver program to the above graph class
 if __name__ == "__main__":
@@ -176,7 +207,7 @@ if __name__ == "__main__":
     graph = Graph(numVertices)
 
     node1 = Node(1, 33.64331, -84.43274, "C52")
-    node2 = Node(2, 33.62331, -84.43252, "C55")
+    node2 = Node(2, 33.64331, -84.43252, "C55")
     node3 = Node(3, 33.64329, -84.43284, "C50")
     node4 = Node(4, 33.64310, -84.43282, "C46")
     node5 = Node(5, 33.64311, -84.43241, "C49")
@@ -190,25 +221,27 @@ if __name__ == "__main__":
 
     # add directed edges
     # direction is in degrees north
-    graph.addEdge(Node(1, 33.64331, -84.43274, "C52"), Node(2, 33.62331, -84.43252, "C55"), distance(33.64331, -84.43274, 33.62331, -84.43252), bearing(33.64331, -84.43274, 33.62331, -84.43252))
-    graph.addEdge(Node(2, 33.62331, -84.43252, "C55"), Node(1, 33.64331, -84.43274, "C52"), distance(33.62331, -84.43252, 33.64331, -84.43274), bearing(33.62331, -84.43252, 33.64331, -84.43274))
-    graph.addEdge(Node(2, 33.62331, -84.43252, "C55"), Node(5, 33.64311, -84.43241, "C49"), distance(33.62331, -84.43252, 33.64311, -84.43241), bearing(33.62331, -84.43252, 33.64311, -84.43241))
-    graph.addEdge(Node(5, 33.64311, -84.43241, "C49"), Node(2, 33.62331, -84.43252, "C55"), distance(33.64311, -84.43241, 33.62331, -84.43252), bearing(33.64311, -84.43241, 33.62331, -84.43252))
-    graph.addEdge(Node(3, 33.64329, -84.43284, "C50"), Node(1, 33.64331, -84.43274, "C52"), distance(33.64329, -84.43284, 33.64331, -84.43274), bearing(33.64329, -84.43284, 33.64331, -84.43274))
-    graph.addEdge(Node(1, 33.64331, -84.43274, "C52"), Node(3, 33.64329, -84.43284, "C50"), distance(33.64331, -84.43274, 33.64329, -84.43284), bearing(33.64331, -84.43274, 33.64329, -84.43284))
-    graph.addEdge(Node(4, 33.64310, -84.43282, "C46"), Node(5, 33.64311, -84.43241, "C49"), distance(33.64310, -84.43282, 33.64311, -84.43241), bearing(33.64310, -84.43282, 33.64311, -84.43241))
-    graph.addEdge(Node(5, 33.64311, -84.43241, "C49"), Node(4, 33.64310, -84.43282, "C46"), distance(33.64311, -84.43241, 33.64310, -84.43282), bearing(33.64311, -84.43241, 33.64310, -84.43282))
-    graph.addEdge(Node(3, 33.64329, -84.43284, "C50"), Node(4, 33.64310, -84.43282, "C46"), distance(33.64329, -84.43284, 33.64310, -84.43282), bearing(33.64329, -84.43284, 33.64310, -84.43282))
-    graph.addEdge(Node(4, 33.64310, -84.43282, "C46"), Node(3, 33.64329, -84.43284, "C50"), distance(33.64310, -84.43282, 33.64329, -84.43284), bearing(33.64310, -84.43282, 33.64329, -84.43284)) 
+    graph.addEdge(node1, node2)
+    graph.addEdge(node2, node1)
+    graph.addEdge(node2, node5)
+    graph.addEdge(node5, node2)
+    graph.addEdge(node3, node1)
+    graph.addEdge(node1, node3)
+    graph.addEdge(node4, node5)
+    graph.addEdge(node5, node4)
+    graph.addEdge(node3, node4)
+    graph.addEdge(node4, node3) 
 
     graph.printGraph()
 
     # calculate distance between user location and nearest node
     userGeolocation = (33.64307,-84.43250)
-    nearestNode, dist = nearest(numVertices, graph, userGeolocation[0], userGeolocation[1], "M")
+    nearestNode, dist, bearing = nearest(numVertices, graph, userGeolocation[0], userGeolocation[1], "M")
     print()
     nearestNode.printNode()
     print(dist)
+    print(bearing)
 
     # dijkstra
-    shortestPaths = dijkstra(numVertices, graph, node2)
+    path = dijkstra(numVertices, graph, node1)
+    path[0] = nearestNode.getLabel()
