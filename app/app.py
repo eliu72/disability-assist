@@ -146,6 +146,7 @@ def api_places():
     myMap = query_parameters.get('map')
 
     # places to load
+    MYDIR = os.path.dirname(__file__)
     filename = "/maps/" + airport + "/" + myMap + "_places.json"
     with open(os.path.join(MYDIR, filename)) as f:
         data = json.load(f)
