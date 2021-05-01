@@ -15,7 +15,7 @@ https://disability-assist.herokuapp.com/api/path?lat=33.64307&lon=-84.43250&airp
 - **lon:** user's current longitude
 - **airport:** airport code [hard-coded at the moment]
 - **map:** map id [hard-coded at the moment]
-- **destID:** id of the destination within map [hard-coded at the moment]
+- **destID:** id of the destination within map - see options by making a api/places request
 
 ### Output:
 The API returns a JSON of the directions from the user's current location to the destination. The JSON is formatted as a list of "legs". Each "leg" of the route gives the distance and direction the user needs to travel.
