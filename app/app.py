@@ -22,7 +22,7 @@ app.config["DEBUG"] = True
 
 # Local Testing Params
 ###############################################
-# http://127.0.0.1:5000/api/path?lat=33.64307&lon=-84.43250&airport=yyz&map=2&destID=C55
+# http://127.0.0.1:5000/api/path?lat=33.64307&lon=-84.43250&airport=ATL&map=C&destID=C55
 
 # tutorial
 # https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask
@@ -71,7 +71,7 @@ def api_all():
     graph = Graph(numVertices)
 
     # graph to load
-    filename = "maps/" + airport + "/" + myMap + ".json"
+    filename = "./maps/" + airport + "/" + myMap + ".json"
     with open(filename) as f:
         data = json.load(f)
     
@@ -89,7 +89,7 @@ def api_all():
             graph.addEdge(node, adjNode)
 
     # need to query from db to determine the node num of the dest id
-    filename = "maps/" + airport + "/" + myMap + "_places.json"
+    filename = "./maps/" + airport + "/" + myMap + "_places.json"
     with open(filename) as f:
         data_places = json.load(f)
     destination = int(data_places[destID])
