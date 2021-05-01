@@ -54,7 +54,7 @@ def api_all():
 
     # graph to load
     MYDIR = os.path.dirname(__file__)
-    filename = "/maps/" + airport + "/" + myMap + ".json"
+    filename = "maps/" + airport + "/" + myMap + ".json"
     
     with open(os.path.join(MYDIR, filename)) as f:
         data = json.load(f)
@@ -73,7 +73,7 @@ def api_all():
             graph.addEdge(node, adjNode)
 
     # need to query from db to determine the node num of the dest id
-    filename = "/maps/" + airport + "/" + myMap + "_places.json"
+    filename = "maps/" + airport + "/" + myMap + "_places.json"
     with open(os.path.join(MYDIR, filename)) as f:
         data_places = json.load(f)
     destination = int(data_places[destID])
@@ -147,7 +147,7 @@ def api_places():
 
     # places to load
     MYDIR = os.path.dirname(__file__)
-    filename = "/maps/" + airport + "/" + myMap + "_places.json"
+    filename = "maps/" + airport + "/" + myMap + "_places.json"
     with open(os.path.join(MYDIR, filename)) as f:
         data = json.load(f)
     
