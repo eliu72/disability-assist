@@ -1,7 +1,7 @@
 from flask import Flask 
 from flask import request, jsonify
 from .graph.Graph import Graph, Node, distance, dijkstra, nearest, bearing
-import json
+import json, os
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -53,8 +53,10 @@ def api_all():
     graph = Graph(numVertices)
 
     # graph to load
+    MYDIR = os.path.dirname(__file__)
     filename = "/maps/" + airport + "/" + myMap + ".json"
-    with open(filename) as f:
+    
+    with open(os.path.join(MYDIR, filename)) as f:
         data = json.load(f)
     
     # create graph
@@ -72,7 +74,7 @@ def api_all():
 
     # need to query from db to determine the node num of the dest id
     filename = "/maps/" + airport + "/" + myMap + "_places.json"
-    with open(filename) as f:
+    with open(os.path.join(MYDIR, filename)) as f:
         data_places = json.load(f)
     destination = int(data_places[destID])
     destNode = graph.getVertex(destination)
@@ -145,7 +147,7 @@ def api_places():
 
     # places to load
     filename = "/maps/" + airport + "/" + myMap + "_places.json"
-    with open(filename) as f:
+    with open(os.path.join(MYDIR, filename)) as f:
         data = json.load(f)
     
     return jsonify(data)
