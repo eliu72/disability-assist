@@ -33,21 +33,21 @@ def home():
 <p>A prototype API for retrieving directions for airport navigation.</p>'''
 
 
-@app.route('api/places', methods=['GET'])
-def api_places():
+# @app.route('api/places', methods=['GET'])
+# def api_places():
     
-    query_parameters = request.args
+#     query_parameters = request.args
     
-    # requested map
-    airport = query_parameters.get('airport')
-    myMap = query_parameters.get('map')
+#     # requested map
+#     airport = query_parameters.get('airport')
+#     myMap = query_parameters.get('map')
 
-    # places to load
-    filename = "maps/" + airport + "/" + myMap + "_places.json"
-    with open(filename) as f:
-        data = json.load(f)
+#     # places to load
+#     filename = "maps/" + airport + "/" + myMap + "_places.json"
+#     with open(filename) as f:
+#         data = json.load(f)
     
-    return jsonify(data)
+#     return jsonify(data)
 
 
 @app.route('/api/path', methods=['GET'])
