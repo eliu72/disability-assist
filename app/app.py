@@ -1,6 +1,7 @@
 from flask import Flask 
 from flask import request, jsonify
 from .graph.Graph import Graph, Node, distance, dijkstra, nearest, bearing
+import json
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -32,6 +33,23 @@ def home():
 <p>A prototype API for retrieving directions for airport navigation.</p>'''
 
 
+@app.route('api/places', methods=['GET'])
+def api_places():
+    
+    query_parameters = request.args
+    
+    # requested map
+    airport = query_parameters.get('airport')
+    myMap = query_parameters.get('map')
+
+    # places to load
+    filename = "maps/" + airport + "/" + myMap + "_places.json"
+    with open(filename) as f:
+        data = json.load(f)
+    
+    return jsonify(data)
+
+
 @app.route('/api/path', methods=['GET'])
 def api_all():
 
@@ -49,41 +67,34 @@ def api_all():
     destID = query_parameters.get('destID')
 
     # init digraph
-    numVertices = 6
+    numVertices = 61
     graph = Graph(numVertices)
 
-    node1 = Node(1, 33.64331, -84.43274, "C52")
-    node2 = Node(2, 33.64331, -84.43252, "C55")
-    node3 = Node(3, 33.64329, -84.43284, "C50")
-    node4 = Node(4, 33.64310, -84.43282, "C46")
-    node5 = Node(5, 33.64311, -84.43241, "C49")
+    # graph to load
+    filename = "maps/" + airport + "/" + myMap + ".json"
+    with open(filename) as f:
+        data = json.load(f)
+    
+    # create graph
+    for i in data:
+
+        # add vertex to graph
+        node = Node(i["label"], float(i["lat"]), float(i["lon"]), i["name"])
+        graph.addVertex(Node(i["label"], float(i["lat"]), float(i["lon"]), i["name"]))
+        
+        # determine adjacencies and add edges
+        adjacentNodes = i["neighbors"]
+        for j in adjacentNodes:
+            adjNode = Node(j, data[j-1]["lat"], data[j-1]["lon"], data[j-1]["name"])
+            graph.addEdge(node, adjNode)
 
     # need to query from db to determine the node num of the dest id
-    # rn this is hardcoded
-    destination = 1
-    destNode = node1
-
-    # add vertices
-    graph.addVertex(node1)
-    graph.addVertex(node2)
-    graph.addVertex(node3)
-    graph.addVertex(node4)
-    graph.addVertex(node5)
-
-    # add directed edges
-    # direction is in degrees north
-    graph.addEdge(node1, node2)
-    graph.addEdge(node2, node1)
-    graph.addEdge(node2, node5)
-    graph.addEdge(node5, node2)
-    graph.addEdge(node3, node1)
-    graph.addEdge(node1, node3)
-    graph.addEdge(node4, node5)
-    graph.addEdge(node5, node4)
-    graph.addEdge(node3, node4)
-    graph.addEdge(node4, node3)
-
-    # graph.printGraph()
+    filename = "maps/" + airport + "/" + myMap + "_places.json"
+    with open(filename) as f:
+        data_places = json.load(f)
+    destination = int(data_places[destID])
+    destNode = graph.getVertex(destination)
+    print(destination)
 
     # search for the shortest path from curr location to destination
     nearestNode, dist, direction = nearest(numVertices, graph, lat, lon, "M")

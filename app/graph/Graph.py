@@ -1,5 +1,6 @@
 import math
 import heapq
+import json
 
 # running virtual environment on windows
 ###############################################
@@ -81,6 +82,9 @@ class Graph:
     
     def getVertices(self):
         return self.vertices
+    
+    def getVertex(self, label):
+        return self.vertices[label]
     
     def getNumVertices(self):
         return self.numVert
@@ -245,3 +249,14 @@ if __name__ == "__main__":
     # dijkstra
     path = dijkstra(numVertices, graph, node1)
     path[0] = nearestNode.getLabel()
+
+
+    with open('../maps/ATL/C.json') as f:
+        data = json.load(f)
+    
+    json = {}
+    for i in data:
+        if (i["name"] != "inter"):
+            json[i["name"]] = i["label"]
+
+    print(json)
