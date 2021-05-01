@@ -32,24 +32,6 @@ def home():
     return '''<h1>Disability Assistance API</h1>
 <p>A prototype API for retrieving directions for airport navigation.</p>'''
 
-
-# @app.route('api/places', methods=['GET'])
-# def api_places():
-    
-#     query_parameters = request.args
-    
-#     # requested map
-#     airport = query_parameters.get('airport')
-#     myMap = query_parameters.get('map')
-
-#     # places to load
-#     filename = "maps/" + airport + "/" + myMap + "_places.json"
-#     with open(filename) as f:
-#         data = json.load(f)
-    
-#     return jsonify(data)
-
-
 @app.route('/api/path', methods=['GET'])
 def api_all():
 
@@ -71,7 +53,7 @@ def api_all():
     graph = Graph(numVertices)
 
     # graph to load
-    filename = "./maps/" + airport + "/" + myMap + ".json"
+    filename = ".maps/" + airport + "/" + myMap + ".json"
     with open(filename) as f:
         data = json.load(f)
     
@@ -89,7 +71,7 @@ def api_all():
             graph.addEdge(node, adjNode)
 
     # need to query from db to determine the node num of the dest id
-    filename = "./maps/" + airport + "/" + myMap + "_places.json"
+    filename = ".maps/" + airport + "/" + myMap + "_places.json"
     with open(filename) as f:
         data_places = json.load(f)
     destination = int(data_places[destID])
@@ -152,3 +134,18 @@ def api_all():
 
     return jsonify(legs)
 
+@app.route('/api/places', methods=['GET'])
+def api_places():
+    
+    query_parameters = request.args
+    
+    # requested map
+    airport = query_parameters.get('airport')
+    myMap = query_parameters.get('map')
+
+    # places to load
+    filename = "maps/" + airport + "/" + myMap + "_places.json"
+    with open(filename) as f:
+        data = json.load(f)
+    
+    return jsonify(data)
