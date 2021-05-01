@@ -1,10 +1,13 @@
 from flask import Flask 
 from flask import request, jsonify
+from flask_cors import CORS, cross_origin
 from .graph.Graph import Graph, Node, distance, dijkstra, nearest, bearing
 import json, os
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config["DEBUG"] = True
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # running virtual environment on windows
 ###############################################
