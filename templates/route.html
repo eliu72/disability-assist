@@ -13,6 +13,9 @@
     <!-- Css -->
     <link rel="stylesheet" type="text/css"  href="../static/temp.css">
 
+    <!-- JavaScript -->
+    <script src="..\templates\main.js"></script>
+
 </head>
 
 
@@ -74,13 +77,19 @@
             <button class="btn-purple">Begin route</button>
             <button class="btn-black">Choose a different route</button>
 
-            <div class="navbar" id="myNavbar">
-                <a style="font-weight:bold" href="#explore" class="active">Explore</a>
-                <a style="font-weight:bold" href="#favorites">Favorites</a>
-                <a style="font-weight:bold" href="#alerts">Alerts</a>
-                <a style="font-weight:bold" href="#settings">Settings</a>
-                <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
-                    <!-- Used to open and close navbar on small screens -->
+            <link rel="stylesheet" 
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+            <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+            <div class="navbar">
+                <a class="active" style="font-weight:bold" href="#">
+                    <i class="fa fa-fw fa-search"></i><br>Explore</a>
+                <a style="font-weight:bold" href="#">
+                    <i class="fa fa-fw fa-search"></i><br>Favorites</a>
+                <a style="font-weight:bold" href="#">
+                    <i class="fa fa-fw fa-envelope"></i><br>Alerts</a>
+                <a style="font-weight:bold" href="#">
+                    <i class="fa fa-fw fa-user"></i><br>Settings</a>
             </div>
         </div>
     </section>

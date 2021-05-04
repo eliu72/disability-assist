@@ -1,9 +1,11 @@
-/* Toggle between adding and removing the "responsive" class to the navbar when the user clicks on the icon */
-function myFunction() {
-    var x = document.getElementById("myNavbar");
-    if (x.className === "navbar") {
-      x.className += " responsive";
-    } else {
-      x.className = "navbar";
-    }
+// When the user scrolls down 20px from the top of the document, slide down the navbar
+// When the user scrolls to the top of the page, slide up the navbar (50px out of the top view)
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("navbar").style.top = "0";
+  } else {
+    document.getElementById("navbar").style.top = "-50px";
   }
+}

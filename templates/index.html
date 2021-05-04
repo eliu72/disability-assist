@@ -24,46 +24,159 @@
 
 
 <body>
-    <h1>This is my html page</h1>
-    <p>This is a paragraph</p>
-    
-    <section id="splash">
-        <container>
-            <h1>header</h1>
-            <p>paragraph</p>
-            <img>
-        </container>
-    </section>
+    <h1>
+        <br>
+        <center> 
+            <b>
+                Popular Routes at LAX
+            </b>
+        </center>
+    </h1>
+    <h3>
+        <center>
+            <b>
+                Terminal 2: Gates 20 - 28
+            </b>
+        </center>
+    </h3>
 
-    
+ <dt>
+    <h3>Departures Level Locations</h3>
+</dt>
+
+    <div class="row list">
+        <div class="col">
+            <dl>
+                <dt>Food and Beverage</dt>
+                <dd>
+                    <button type="button" class="block">
+                        <b>Starbucks
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd>
+                <hr>
+                <dd>
+                    <button type="button" class="block">
+                        <b>
+                            Pick Up Stix
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd>
+                <hr>
+                <dt>Shopping</dt> 
+                <dd>
+                    <button type="button" class="block">
+                        <b>CNBC Smartshop
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd> 
+                <hr>
+                <dd>
+                    <button type="button" class="block">
+                        <b>In Motion
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd>
+                <hr>
+                <dt>Services</dt>
+                <dd>
+                    <button type="button" class="block">
+                        <b>
+                            Nursing Room
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd>
+                <hr>
+                <dd>
+                    <button type="button" class="block">
+                        <b>
+                            ATM
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd>
+                <hr>
+            </dl>
+        </div>
+    </div>
+
     <dt>
-        <h3>Departures Level Locations</h3>
-        <dt>Food and Beverage</dt>
-        <dd>Starbucks</dd>
-        <dd>Pick Up Stix</dd>
-        <dt>Shopping</dt>
-        <dd>CNBC Smartshop</dd>
-        <dd>In Motion</dd>
-        <dt>Services</dt>
-        <dd>Nursing Room</dd>
-        <dd>ATM</dd>
-        <h3>Arrivals Level Locations</h3>
-        <dt>Food and Beverage</dt>
-        <dd>Starbucks</dd>
-        <dt>Services</dt>
-        <dd>Currency Exchange</dd>
-        <dd>ATM</dd>
+        <h3>Arrivals Level Locations
+        </h3>
     </dt>
 
-    <div class="navbar" id="myNavbar">
-        <a style="font-weight:bold" href="#explore" class="active">Explore</a>
-        <a style="font-weight:bold" href="#favorites">Favorites</a>
-        <a style="font-weight:bold" href="#alerts">Alerts</a>
-        <a style="font-weight:bold" href="#settings">Settings</a>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
-            <!-- Used to open and close navbar on small screens -->
+    <div class="row list">
+        <div class="col">
+            <dl>
+                <dt>
+                    Food and Beverage
+                </dt>
+                <dd>
+                    <button type="button" class="block">
+                        <b>
+                            Starbucks
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd>
+                <hr>
+                <dt>Services</dt>
+                <dd>
+                    <button type="button" class="block">
+                        <b>
+                            Currency Exchange
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd>
+                <hr>
+                <dd>
+                    <button type="button" class="block">
+                        <b>
+                            ATM
+                        </b>
+                        <br>
+                        X km away
+                    </button>
+                </dd>
+                <hr>
+                <br>
+                <br>
+                <br>
+                <br>
+            </dl>
+        </div>
     </div>
-    
+
+
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+    <div class="navbar">
+        <a class="active" style="font-weight:bold" href="#">
+            <i class="fa fa-fw fa-search"></i><br>Explore</a>
+        <a style="font-weight:bold" href="#">
+            <i class="fa fa-fw fa-search"></i><br>Favorites</a>
+        <a style="font-weight:bold" href="#">
+            <i class="fa fa-fw fa-envelope"></i><br>Alerts</a>
+        <a style="font-weight:bold" href="#">
+            <i class="fa fa-fw fa-user"></i><br>Settings</a>
+    </div>
+
 
     <!--Bootstrap Javascript--> 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
