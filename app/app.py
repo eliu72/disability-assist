@@ -27,8 +27,13 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 ###############################################
 # http://127.0.0.1:5000/api/path?lat=33.64307&lon=-84.43250&airport=ATL&map=C&destID=C55
 
-# tutorial
+# BUILDING A PYTHON FLASK API TUTORIAL
 # https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask
+
+# DEPLOYING TO HEROKU TUTORIAL
+# https://dev.to/techparida/how-to-deploy-a-flask-app-on-heroku-heb 
+# Reference Only: https://stackabuse.com/deploying-a-flask-application-to-heroku/
+# Reference Only: https://realpython.com/flask-by-example-part-1-project-setup/
 
 @app.route('/', methods=['GET'])
 def home():
