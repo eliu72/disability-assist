@@ -17,7 +17,7 @@
 
 
 
-<body>
+<body onclick="doubletap()">
     <button onclick="getLocation()">Find my location</button>
     <button onclick="calculatePath()">Calculate Path</button>
 
@@ -52,31 +52,16 @@
 
             <div class="row list">
                 <div id="directions" class="col">
-                    <!-- <dl>
-                        <dt>Turn left when pavement changes to carpet</dt>
-                        <dd>4m</dd>
-                        <hr>
-                        <dt>Continue straight until you hear escalators</dt>
-                        <dd>3m</dd>
-                        <hr>
-                        <dt>Take escalators up to level 4</dt>
-                        <dd>8m</dd>
-                        <hr>
-                        <dt>Make an immediate right turn once off escalators</dt>
-                        <dd>3m</dd>
-                        <hr>
-                        <dt>Continue straight until you hear ticket booth bells</dt>
-                        <dd>1m</dd>
-                        <hr>
-                        <dt>You have reached ticketing</dt>
-                        <dd>0.1m</dd>
-                        <hr>
-                    </dl> -->
+                    <!--Javascript Calls API and returns list of directions-->
                 </div>
             </div>
 
-            <button class="btn-purple">Begin route</button>
+            <button class="btn-purple" onclick="speak()">Begin route</button>
             <button class="btn-black">Choose a different route</button>
+
+            <div>
+                <p class="output"></p>
+            </div>
 
             <link rel="stylesheet" 
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
