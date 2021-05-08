@@ -37,28 +37,29 @@ function storePosition(position) {
     console.log(localStorage.getItem('userLon'));
 }
 
-function makeDL(array){
-  // Create the list element:
-  var list = document.createElement("DL");
+function makeDL_2(array){
+    // Create the list element:
+    var list = document.createElement("DL");
 
-  for (var i = 0; i < array.length; i++) {
+    for (var i = 0; i < array.length; i++) {
 
-      // Create the list item:
-      var item = document.createElement('DT');
-      var description = "Head " + array[i]['direction']['degrees'].toFixed(0) + " " + array[i]["direction"]["bearing"]
-      item.appendChild(document.createTextNode(description));
+        // Create the list item:
+        var item = document.createElement('button');
+        var description = "Head " + array[i]['direction']['degrees'].toFixed(0) + " " + array[i]["direction"]["bearing"]
 
-      var itemDescription = document.createElement("DD");
-      var distance = (array[i]["distance"]["miles"] * 1609.344).toFixed(0);
-      itemDescription.appendChild(document.createTextNode(distance + "m"));
+        item.appendChild(document.createTextNode(description));
 
-      // Add it to the list:
-      list.appendChild(item);
-      list.appendChild(itemDescription);
-      list.appendChild(document.createElement("HR"));
-  }
+        var itemDescription = document.createElement("DD");
+        var distance = (array[i]["distance"]["miles"] * 1609.344).toFixed(0);
+        itemDescription.appendChild(document.createTextNode(distance + "m"));
 
-  return list
+        // Add it to the list:
+        list.appendChild(item);
+        list.appendChild(itemDescription);
+        list.appendChild(document.createElement("HR"));
+    }
+
+    return list
 }
 
 // function to calculate path from user to destination
@@ -70,7 +71,7 @@ function calculatePath(){
     }).then(data => {
 
         // Work with JSON data here
-        document.getElementById("directions").appendChild(makeDL(data));
+        document.getElementById("directions").appendChild(makeDL_2(data));
 
 
     }).catch(err => {
